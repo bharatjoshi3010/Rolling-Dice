@@ -6,7 +6,10 @@ import {
   Text, 
   ImageSourcePropType,
   Image,
-  Pressable
+  Pressable,
+  //now for the animation
+  Animated,
+  Easing
 } from 'react-native';
 
 import {
@@ -28,14 +31,16 @@ import DiceSix from '../assets/dice/six.png'
 //defining the dice props component
 //basically it is like a abstract class which take care that whenever we make a component using diceProps it have a imageUrl on it 
 type DiceProps = PropsWithChildren<{
-  imageUrl: ImageSourcePropType
+  imageUrl: ImageSourcePropType;
+  animationStyle?: any; //for the animation
 }>
 
-const Dice = ({imageUrl}: DiceProps):JSX.Element => {
+const Dice = ({imageUrl, animationStyle}: DiceProps):JSX.Element => {
   return (
-    <View>
+    //we changed the 'View' to the 'Animated.View' for the shake of animation 
+    <Animated.View style={animationStyle}>  
       <Image style={styles.diceImage} source={imageUrl} />
-    </View>
+    </Animated.View>
   )
 }
 
@@ -44,7 +49,35 @@ function App() {
   const [diceImage, setDiceImage] = useState<ImageSourcePropType>(DiceOne)
   //<ImageSourcePropType> it helps us in assuing the provided value of use state variable is always a image
 
+  //for animation
+  const diceAnim = useState(new Animated.Value(0))[0]; //for animation
+
+  const spin = diceAnim.interpolate({
+    inputRange: [0,1],
+    outputRange: ['0deg', '720deg']
+  });
+
+  const spinAndScale = {
+  transform: [
+    { rotate: spin },
+    { scale: diceAnim.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [1, 1.2, 1] // zoom in then back
+    })}
+  ]
+};
+
   const rollDiceOnTap = () => {
+
+    //starting rotation animation
+    diceAnim.setValue(0);
+    Animated.timing(diceAnim, {
+      toValue: 1,
+      duration: 500, //time taken by the animation to complete
+      easing : Easing.out(Easing.ease),
+      useNativeDriver : true,
+    }).start();
+
     let randomNumber = Math.floor(Math.random()*6) + 1;
   
     switch (randomNumber) {
@@ -70,12 +103,13 @@ function App() {
         setDiceImage(DiceOne)
         break;  
     }
-  }
+  };
   
   return (
     <SafeAreaView style={styles.con}>
       <View style={styles.container}> 
-        <Dice imageUrl={diceImage}/>
+        {/* after adding the annimation the 'Dice' has two perameters on it one is image url and other is animation value */}
+        <Dice imageUrl={diceImage} animationStyle={spinAndScale}/> 
       </View>
       <Pressable onPress={() =>{
         rollDiceOnTap()
@@ -98,10 +132,11 @@ const styles = StyleSheet.create({
   },
   diceImage:{
     height : 200,
-    width : 200
+    width : 200,
+    // marginBottom: 100
   },
   pressableBtnText:{
-    marginTop : 20,
+    marginTop : 100,
     borderWidth : 2,
     paddingVertical: 10,
     paddingHorizontal : 40,
