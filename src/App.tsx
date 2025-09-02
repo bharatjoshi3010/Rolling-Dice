@@ -28,12 +28,21 @@ import DiceFour from '../assets/dice/four.png'
 import DiceFive from '../assets/dice/five.png'
 import DiceSix from '../assets/dice/six.png'
 
+//for reactNative Heptic feedback
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+
 //defining the dice props component
 //basically it is like a abstract class which take care that whenever we make a component using diceProps it have a imageUrl on it 
 type DiceProps = PropsWithChildren<{
   imageUrl: ImageSourcePropType;
   animationStyle?: any; //for the animation
 }>
+
+//for the heptic feedback
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 const Dice = ({imageUrl, animationStyle}: DiceProps):JSX.Element => {
   return (
@@ -103,6 +112,9 @@ function App() {
         setDiceImage(DiceOne)
         break;  
     }
+
+    ReactNativeHapticFeedback.trigger("impactHeavy", options);
+    //its to trigger the heptic feedback
   };
   
   return (
