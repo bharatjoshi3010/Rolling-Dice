@@ -1,0 +1,119 @@
+import { 
+  StatusBar, 
+  StyleSheet, 
+  useColorScheme, 
+  View, 
+  Text, 
+  ImageSourcePropType,
+  Image,
+  Pressable
+} from 'react-native';
+
+import {
+  SafeAreaView,
+} from 'react-native-safe-area-context';
+
+//used to define properties of a component 
+import { useState, type JSX, type PropsWithChildren } from 'react';
+
+//importing the images from the assets 
+//also added a index.d.ts file om the src folder so that we can define a modeule for the '.png'
+import DiceOne from '../assets/dice/one.png'
+import DiceTwo from '../assets/dice/two.png'
+import DiceThree from '../assets/dice/three.png'
+import DiceFour from '../assets/dice/four.png'
+import DiceFive from '../assets/dice/five.png'
+import DiceSix from '../assets/dice/six.png'
+
+//defining the dice props component
+//basically it is like a abstract class which take care that whenever we make a component using diceProps it have a imageUrl on it 
+type DiceProps = PropsWithChildren<{
+  imageUrl: ImageSourcePropType
+}>
+
+const Dice = ({imageUrl}: DiceProps):JSX.Element => {
+  return (
+    <View>
+      <Image style={styles.diceImage} source={imageUrl} />
+    </View>
+  )
+}
+
+
+function App() {
+  const [diceImage, setDiceImage] = useState<ImageSourcePropType>(DiceOne)
+  //<ImageSourcePropType> it helps us in assuing the provided value of use state variable is always a image
+
+  const rollDiceOnTap = () => {
+    let randomNumber = Math.floor(Math.random()*6) + 1;
+  
+    switch (randomNumber) {
+      case 1:
+        setDiceImage(DiceOne)
+        break;
+      case 2:
+        setDiceImage(DiceTwo)
+        break;
+      case 3:
+        setDiceImage(DiceThree)
+        break;
+      case 4:
+        setDiceImage(DiceFour)
+        break;
+      case 5:
+        setDiceImage(DiceFive)
+        break;
+      case 6:
+        setDiceImage(DiceSix)
+        break;
+      default :
+        setDiceImage(DiceOne)
+        break;  
+    }
+  }
+  
+  return (
+    <SafeAreaView style={styles.con}>
+      <View style={styles.container}> 
+        <Dice imageUrl={diceImage}/>
+      </View>
+      <Pressable onPress={() =>{
+        rollDiceOnTap()
+      }}>
+        <Text style={styles.pressableBtnText}>Roll The Dice</Text>
+      </Pressable>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  con:{
+    flex :1,
+    justifyContent : 'center',
+    alignItems : 'center'
+  },
+  container:{
+    justifyContent : 'center',
+    alignItems : 'center'
+  },
+  diceImage:{
+    height : 200,
+    width : 200
+  },
+  pressableBtnText:{
+    marginTop : 20,
+    borderWidth : 2,
+    paddingVertical: 10,
+    paddingHorizontal : 40,
+    justifyContent : 'center',
+    alignItems : 'center',
+    borderRadius : 10,
+    borderColor : '#ee3a3aff',
+    fontSize : 18,
+    fontWeight : '600',
+    color : '#642323ff',
+    backgroundColor : '#f3ddddff'
+  }
+});
+
+export default App;
