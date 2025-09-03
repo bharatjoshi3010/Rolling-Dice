@@ -25,4 +25,6 @@ This project is part of my **React Native learning journey**, where I'm explorin
 git clone git@github.com:your-username/maigo-dice-app.git
 cd maigo-dice-app
 
-##
+##⬇️ Download it :
+Download the release apk and experience it on your Android device
+**[⬇ Download APK](https://github.com/bharatjoshi3010/Rolling-Dice/raw/main/app-release.apk)**
